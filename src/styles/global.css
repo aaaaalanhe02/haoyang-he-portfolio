@@ -271,11 +271,13 @@ a.tag:hover, .tag--link:hover { background-color: var(--color-accent); color: #f
   display: flex; flex-direction: column; gap: 1.2rem; z-index: 900;
 }
 .side-nav a {
-  color: #9aa0a6; font-size: 0.95rem; font-weight: 400; font-family: var(--font-serif);
+  color: var(--color-secondary); font-size: 0.95rem; font-weight: 600; font-family: var(--font-serif);
   letter-spacing: 0.3px; white-space: nowrap; transition: all 0.3s ease;
+  /* 白色描边光晕：在明亮雪山与浅色 section 上都清晰 */
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.95);
 }
 .side-nav a:hover { color: var(--color-accent); transform: translateX(6px); }
-.side-nav a.active { color: var(--color-primary); font-weight: 600; transform: translateX(6px); }
+.side-nav a.active { color: var(--color-primary); font-weight: 700; transform: translateX(6px); }
 @media (max-width: 1280px) { .side-nav { display: none; } }
 
 /* --------------------------- scroll fade-in --------------------------- */

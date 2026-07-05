@@ -7,6 +7,17 @@ import VideoEmbed from '../components/VideoEmbed.astro';
 import { SITE, GROUP, withBase } from '../lib/site';
 import { education, experience, skills } from '../lib/cv';
 import { getGallery, getCover } from '../lib/galleries';
+import type { ImageMetadata } from 'astro';
+import uclLogo from '../assets/logos/ucl.png';
+import ediLogo from '../assets/logos/edinburgh.png';
+import njuLogo from '../assets/logos/nanjing.png';
+
+// 机构 → 校徽（Education / Experience 时间线用；无匹配则回退首字母徽标）
+const orgLogos: Record<string, ImageMetadata> = {
+  'University College London': uclLogo,
+  'University of Edinburgh': ediLogo,
+  'Nanjing University': njuLogo,
+};
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order,
@@ -125,7 +136,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
         {education.map((e) => (
           <div class="timeline-item fade-in">
             <div class="timeline-date">{e.period}</div>
-            <div class="timeline-badge"><span class="logo-placeholder">{initials(e.org)}</span></div>
+            <div class="timeline-badge">{orgLogos[e.org] ? <Image class="badge-logo" src={orgLogos[e.org]} alt={e.org} width={112} height={112} /> : <span class="logo-placeholder">{initials(e.org)}</span>}</div>
             <div class="timeline-content">
               <h3>{e.degree}</h3>
               <p class="institution">{e.org}</p>
@@ -144,7 +155,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
       <div class="experience-list">
         {experience.map((x) => (
           <article class="experience-item fade-in">
-            <div class="exp-badge"><span class="logo-placeholder">{initials(x.org)}</span></div>
+            <div class="exp-badge">{orgLogos[x.org] ? <Image class="badge-logo" src={orgLogos[x.org]} alt={x.org} width={112} height={112} /> : <span class="logo-placeholder">{initials(x.org)}</span>}</div>
             <div class="exp-content">
               <div class="exp-header">
                 <h3>
@@ -351,6 +362,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
     .experience-item { display: flex; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--color-white); border-radius: 8px; margin-bottom: var(--spacing-md); box-shadow: var(--shadow-card); transition: box-shadow .3s ease; }
     .experience-item:hover { box-shadow: var(--shadow-card-hover); }
     .exp-badge { flex: 0 0 56px; }
+    .badge-logo { width: 56px; height: 56px; border-radius: 12px; object-fit: contain; background: #fff; border: 1px solid var(--color-border); padding: 5px; }
     .exp-content { flex: 1; }
     .exp-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; }
     .exp-header h3 { font-size: 1.25rem; }

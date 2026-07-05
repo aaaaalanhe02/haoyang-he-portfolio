@@ -21,3 +21,8 @@ raw-assets/
 
 # scratch
 /tmp/
+
+# 根目录散落源图（非站点资产）
+/*.png
+/*.jpg
+/*.jpeg
