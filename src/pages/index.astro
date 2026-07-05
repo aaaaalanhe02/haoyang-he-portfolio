@@ -19,6 +19,9 @@ const preview = [
   ...getGallery('climbing').slice(0, 1),
 ].slice(0, 5);
 
+const allPhotos = getGallery('photography');
+const photoPreview = allPhotos.slice(0, 8);
+
 const tagClass: Record<string, string> = {
   Research: 'tag--accent',
   Engineering: 'tag',
@@ -169,6 +172,33 @@ const tagClass: Record<string, string> = {
     </div>
   </section>
 
+  <!-- ======================= PHOTOGRAPHY ======================= -->
+  {
+    photoPreview.length > 0 && (
+      <section class="section">
+        <div class="container container--wide">
+          <h2 class="section-title"><span class="ico">📷</span> Photography</h2>
+          <p class="lead adventures-lead">A running gallery from the road and the mountains.</p>
+          <div class="photo-strip">
+            {photoPreview.map((img, i) => (
+              <Image
+                class="photo-thumb"
+                src={img}
+                alt={`Photograph ${i + 1}`}
+                widths={[200, 400]}
+                sizes="(max-width: 700px) 33vw, 150px"
+                loading="lazy"
+              />
+            ))}
+          </div>
+          <p class="adventures-links">
+            <a class="btn" href={withBase('/photography')}>See all {allPhotos.length} photos →</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
   <style>
     /* hero */
     .hero {
@@ -247,5 +277,11 @@ const tagClass: Record<string, string> = {
       .preview-grid { grid-template-columns: repeat(3, 1fr); }
       .preview-img:nth-child(n + 4) { display: none; }
     }
+
+    /* photography strip */
+    .photo-strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.5rem; }
+    .photo-thumb { aspect-ratio: 1; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+    @media (max-width: 900px) { .photo-strip { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 480px) { .photo-strip { grid-template-columns: repeat(3, 1fr); } .photo-thumb:nth-child(n + 7) { display: none; } }
   </style>
 </BaseLayout>

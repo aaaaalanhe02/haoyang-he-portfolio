@@ -21,6 +21,7 @@ map_slug() {
     "Nanjing University Intern") echo "nanjing" ;;
     "Biofilm project")           echo "biofilm" ;;
     "Blood Rheology project")    echo "blood-rheology" ;;
+    "Photography")               echo "photography" ;;
     *)                           echo "" ;;
   esac
 }

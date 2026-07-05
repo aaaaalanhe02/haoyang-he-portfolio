@@ -14,6 +14,7 @@ export const SITE = {
 // 主导航（首页由左上角名字链接，故不单列 Home）
 export const NAV: { label: string; href: string }[] = [
   { label: 'Research', href: '/research' },
+  { label: 'Photography', href: '/photography' },
   { label: 'Adventures', href: '/adventures' },
   { label: 'Music', href: '/music' },
   { label: 'About', href: '/about' },

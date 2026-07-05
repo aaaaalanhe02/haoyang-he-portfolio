@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '../components/Gallery.astro';
+import { getGallery } from '../lib/galleries';
+
+const photos = getGallery('photography');
+---
+
+<BaseLayout
+  title="Photography"
+  description="A gallery of photographs — mountains, travel and the moments in between."
+>
+  <section class="container container--wide section">
+    <p class="eyebrow">Through the lens</p>
+    <h1 class="page-title">Photography</h1>
+    <p class="lead page-intro">
+      {photos.length} frames from the road and the mountains. Click any photo to view it
+      full-size — use ❮ ❯ or the arrow keys to browse.
+    </p>
+
+    {
+      photos.length > 0 ? (
+        <Gallery images={photos} altPrefix="Photograph" columns={4} />
+      ) : (
+        <p class="muted">Photos coming soon.</p>
+      )
+    }
+  </section>
+
+  <style>
+    .page-title { font-size: var(--step-6); margin-block: 0.2rem 0.6rem; }
+    .page-intro { max-width: 58ch; margin-bottom: 2rem; }
+  </style>
+</BaseLayout>

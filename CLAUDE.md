@@ -31,7 +31,7 @@ sees them. Videos (`.MOV`) likewise need transcoding.
 Flow: `raw-assets/` (git-ignored source of truth) → conversion scripts → committed web assets.
 
 - `scripts/convert-assets.sh` — uses macOS `sips` to convert HEIC/TIF → downscaled JPG/PNG
-  into `src/assets/<section>/` (e.g. `kilimanjaro/`, `hyped/`, `biofilm/`), and copies PDFs
+  into `src/assets/<section>/` (e.g. `kilimanjaro/`, `hyped/`, `biofilm/`, `photography/`), and copies PDFs
   (CV, honours thesis, UCL literature review, certificates) into `public/docs/`.
 - `scripts/convert-videos.sh` — uses `ffmpeg` to transcode MOV/MP4 → web H.264 MP4 into
   `public/videos/`. **The `-nostdin` flag on ffmpeg is required** — without it ffmpeg eats the
@@ -55,6 +55,7 @@ Frontmatter drives everything; MDX body is just prose. Key fields:
   Education → Experience timeline → Selected work → Adventures preview). Pulls structured
   CV data from `src/lib/cv.ts`.
 - `/research` + `/research/[...slug]` — project list + detail (renders MDX, gallery, videos, docs).
+- `/photography` — full gallery (a `src/assets/photography/` folder of ~58 photos).
 - `/adventures`, `/music`, `/about`, `/404`.
 
 **Shared helpers:**

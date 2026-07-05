@@ -32,7 +32,7 @@ note when using a project-page repo.
 
 ```
 src/
-  pages/          index + research/ + adventures, music, about, 404
+  pages/          index + research/ + photography, adventures, music, about, 404
   content/projects/*.mdx
   components/     Nav, Footer, ProjectCard, Gallery, VideoEmbed
   layouts/BaseLayout.astro
