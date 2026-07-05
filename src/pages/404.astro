@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
+---
+
+<BaseLayout title="Not found" description="Page not found.">
+  <section class="container section center notfound">
+    <p class="eyebrow">404</p>
+    <h1 class="nf-title">This page went off-trail.</h1>
+    <p class="lead">The page you're after doesn't exist — or has been moved.</p>
+    <p class="nf-actions">
+      <a class="btn btn--primary" href={withBase('/')}>Back home</a>
+      <a class="btn" href={withBase('/research')}>See research</a>
+    </p>
+  </section>
+
+  <style>
+    .notfound { padding-block: 5rem; }
+    .nf-title { font-size: var(--step-6); margin-block: 0.4rem 0.6rem; }
+    .nf-actions { display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; }
+  </style>
+</BaseLayout>

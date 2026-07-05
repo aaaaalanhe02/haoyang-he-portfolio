@@ -1,0 +1,36 @@
+---
+import { withBase } from '../lib/site';
+
+interface Props {
+  src: string; // public/videos 下的文件名，如 'band.mp4'
+  caption?: string;
+  poster?: string; // 可选 public 路径
+}
+const { src, caption, poster } = Astro.props;
+---
+
+<figure class="video">
+  <video
+    controls
+    preload="metadata"
+    playsinline
+    poster={poster ? withBase(poster) : undefined}
+  >
+    <source src={withBase(`/videos/${src}`)} type="video/mp4" />
+    Your browser does not support embedded video.
+  </video>
+  {caption && <figcaption class="muted">{caption}</figcaption>}
+</figure>
+
+<style>
+  .video { margin: 0; }
+  .video video {
+    width: 100%;
+    height: auto;
+    max-height: 78vh;
+    border-radius: var(--radius);
+    background: #000;
+    border: 1px solid var(--border);
+  }
+  figcaption { margin-top: 0.5rem; font-size: 0.9rem; text-align: center; }
+</style>

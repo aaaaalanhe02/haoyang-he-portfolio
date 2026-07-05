@@ -1,0 +1,126 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { getGallery } from '../../lib/galleries';
+import { withBase } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { slug: p.id }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const d = project.data;
+const galleryImages = d.gallery ? getGallery(d.gallery) : [];
+
+const linkHref = (h: string) => (h.startsWith('/') ? withBase(h) : h);
+const catLabel: Record<string, string> = {
+  research: 'Research',
+  engineering: 'Engineering',
+  data: 'Data',
+};
+---
+
+<BaseLayout title={d.title} description={d.summary}>
+  <article class="container section project">
+    <a class="back" href={withBase('/research')}>← All projects</a>
+
+    <header class="project-head">
+      <p class="eyebrow">{catLabel[d.category]}</p>
+      <h1 class="project-title">{d.title}</h1>
+      {d.subtitle && <p class="project-subtitle muted">{d.subtitle}</p>}
+      {
+        (d.org || d.period) && (
+          <p class="project-meta">
+            {d.org}
+            {d.org && d.period && ' · '}
+            {d.period}
+          </p>
+        )
+      }
+      {
+        d.tags.length > 0 && (
+          <ul class="tags project-tags">
+            {d.tags.map((t) => (
+              <li class="tag">{t}</li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        d.links.length > 0 && (
+          <div class="project-links">
+            {d.links.map((l) => (
+              <a
+                class="btn"
+                href={linkHref(l.href)}
+                target={l.href.startsWith('http') ? '_blank' : undefined}
+                rel="noopener"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      d.cover && (
+        <figure class="project-cover">
+          <Image
+            src={d.cover}
+            alt={d.coverAlt ?? d.title}
+            widths={[600, 1000, 1400]}
+            sizes="(max-width: 900px) 100vw, 860px"
+          />
+        </figure>
+      )
+    }
+
+    <div class="prose project-prose">
+      <Content />
+    </div>
+
+    {
+      d.videos.length > 0 && (
+        <section class="project-block">
+          <h2 class="section-title"><span class="ico">🎬</span> Video</h2>
+          <div class="video-stack">
+            {d.videos.map((v) => (
+              <VideoEmbed src={v} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      galleryImages.length > 0 && (
+        <section class="project-block">
+          <h2 class="section-title"><span class="ico">🖼️</span> Gallery</h2>
+          <Gallery images={galleryImages} altPrefix={d.title} columns={3} />
+        </section>
+      )
+    }
+  </article>
+
+  <style>
+    .project { max-width: 860px; }
+    .back { display: inline-block; font-weight: 600; margin-bottom: 1.5rem; }
+    .project-title { font-size: var(--step-6); margin-block: 0.2rem; }
+    .project-subtitle { font-size: var(--step-3); }
+    .project-meta { color: var(--accent-strong); font-weight: 600; margin-top: 0.4rem; }
+    .project-tags { margin-top: 0.8rem; }
+    .project-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.2rem; }
+    .project-cover { margin: 2rem 0 0; }
+    .project-cover :global(img) { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+    .project-prose { margin-top: 2rem; }
+    .project-block { margin-top: 2.5rem; }
+    .video-stack { display: grid; gap: 1.2rem; }
+  </style>
+</BaseLayout>

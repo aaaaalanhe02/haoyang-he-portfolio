@@ -1,0 +1,251 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE, withBase } from '../lib/site';
+import { education, experience, interests } from '../lib/cv';
+import { getGallery } from '../lib/galleries';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// hero 配图 + adventures 预览
+const portrait = getGallery('kilimanjaro')[1] ?? getGallery('kilimanjaro')[0];
+const preview = [
+  ...getGallery('kilimanjaro').slice(0, 2),
+  ...getGallery('tmb').slice(0, 2),
+  ...getGallery('climbing').slice(0, 1),
+].slice(0, 5);
+
+const tagClass: Record<string, string> = {
+  Research: 'tag--accent',
+  Engineering: 'tag',
+  Data: 'tag',
+};
+---
+
+<BaseLayout>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero container fade-in">
+    <div class="hero-text">
+      <p class="eyebrow">{SITE.location}</p>
+      <h1 class="hero-name">{SITE.name} <span class="hero-nick">({SITE.nickname})</span></h1>
+      <p class="hero-role">{SITE.role}</p>
+      <p class="hero-tagline">{SITE.tagline}</p>
+      <div class="hero-actions">
+        <a class="btn btn--primary" href={withBase('/research')}>Read my research</a>
+        <a class="btn" href={withBase('/docs/CV.pdf')} target="_blank" rel="noopener">Download CV ↗</a>
+        <a class="btn" href={`mailto:${SITE.email}`}>Email</a>
+      </div>
+    </div>
+    {
+      portrait && (
+        <div class="hero-media">
+          <Image
+            src={portrait}
+            alt="Alan on Mount Kilimanjaro"
+            widths={[360, 640]}
+            sizes="(max-width: 780px) 60vw, 300px"
+          />
+        </div>
+      )
+    }
+  </section>
+
+  <!-- ========================= INTERESTS ========================= -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><span class="ico">✦</span> At a glance</h2>
+      <ul class="interests">
+        {
+          interests.map((it) => (
+            <li class="interest">
+              <span class="interest-emoji" aria-hidden="true">{it.emoji}</span>
+              <div>
+                <p class="interest-label">{it.label}</p>
+                <p class="muted interest-text">{it.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========================= EDUCATION ========================= -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><span class="ico">🎓</span> Education</h2>
+      <ul class="edu-list">
+        {
+          education.map((e) => (
+            <li class="edu">
+              <div class="edu-head">
+                <span class="edu-degree">{e.degree}</span>
+                <span class="edu-period muted">{e.period}</span>
+              </div>
+              <p class="edu-org">{e.org}</p>
+              <p class="muted edu-note">{e.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========================= EXPERIENCE ======================== -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><span class="ico">🧭</span> Experience</h2>
+      <ol class="timeline">
+        {
+          experience.map((x) => (
+            <li class="tl-item">
+              <div class="tl-dot" aria-hidden="true" />
+              <div class="tl-body">
+                <div class="tl-head">
+                  <span class={`tag ${tagClass[x.tag]}`}>{x.tag}</span>
+                  <span class="tl-period muted">{x.period}</span>
+                </div>
+                <h3 class="tl-role">
+                  {x.project ? (
+                    <a href={withBase(`/research/${x.project}`)}>{x.role}</a>
+                  ) : (
+                    x.role
+                  )}
+                </h3>
+                <p class="tl-org muted">{x.org}</p>
+                <ul class="tl-points">
+                  {x.points.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ======================= SELECTED WORK ======================= -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><span class="ico">🔬</span> Selected work</h2>
+      <div class="card-grid">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= ADVENTURES ======================== -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><span class="ico">🏔️</span> Beyond the lab</h2>
+      <p class="lead adventures-lead">
+        Kilimanjaro summits, the Tour du Mont Blanc, climbing walls and a thrash-metal
+        drum kit. The mountains and the music keep the science honest.
+      </p>
+      <div class="preview-grid">
+        {
+          preview.map((img, i) => (
+            <Image
+              class="preview-img"
+              src={img}
+              alt={`Adventure ${i + 1}`}
+              widths={[240, 480]}
+              sizes="(max-width: 700px) 40vw, 200px"
+              loading="lazy"
+            />
+          ))
+        }
+      </div>
+      <p class="adventures-links">
+        <a class="btn" href={withBase('/adventures')}>See adventures →</a>
+        <a class="btn" href={withBase('/music')}>Hear the drums →</a>
+      </p>
+    </div>
+  </section>
+
+  <style>
+    /* hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2.5rem;
+      padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    }
+    .hero-name { font-size: var(--step-6); }
+    .hero-nick { color: var(--muted); font-weight: 500; }
+    .hero-role { font-size: var(--step-4); color: var(--accent-strong); font-weight: 600; margin-top: 0.25rem; }
+    .hero-tagline { max-width: 46ch; margin-top: 1rem; color: var(--muted); font-size: var(--step-3); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+    .hero-media :global(img) {
+      width: clamp(180px, 26vw, 260px);
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 780px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-media { order: -1; }
+      .hero-media :global(img) { width: clamp(160px, 44vw, 220px); }
+    }
+
+    /* interests */
+    .interests {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;
+    }
+    .interest {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+    }
+    .interest-emoji { font-size: 1.6rem; line-height: 1; }
+    .interest-label { font-weight: 700; color: var(--text-strong); }
+    .interest-text { font-size: 0.9rem; margin-top: 0.15rem; }
+
+    /* education */
+    .edu-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+    .edu { padding-left: 1rem; border-left: 3px solid var(--accent-soft); }
+    .edu-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
+    .edu-degree { font-weight: 700; font-size: 1.1rem; color: var(--text-strong); }
+    .edu-org { color: var(--accent-strong); font-weight: 600; }
+    .edu-note { font-size: 0.9rem; }
+
+    /* timeline */
+    .timeline { list-style: none; padding: 0; margin: 0; }
+    .tl-item { position: relative; padding-left: 1.6rem; padding-bottom: 1.6rem; }
+    .tl-item::before {
+      content: ''; position: absolute; left: 5px; top: 0.4rem; bottom: -0.4rem; width: 2px; background: var(--border);
+    }
+    .tl-item:last-child::before { display: none; }
+    .tl-dot {
+      position: absolute; left: 0; top: 0.35rem; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+    .tl-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+    .tl-period { font-size: 0.85rem; }
+    .tl-role { font-size: 1.1rem; margin-top: 0.3rem; }
+    .tl-role a { color: var(--text-strong); }
+    .tl-role a:hover { color: var(--accent-strong); }
+    .tl-org { font-size: 0.95rem; }
+    .tl-points { margin-top: 0.4rem; padding-left: 1.1rem; }
+    .tl-points li { font-size: 0.92rem; }
+    .tl-points li + li { margin-top: 0.2rem; }
+
+    /* adventures preview */
+    .adventures-lead { max-width: 60ch; margin-bottom: 1.2rem; }
+    .preview-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; }
+    .preview-img { aspect-ratio: 1; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .adventures-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.3rem; }
+    @media (max-width: 700px) {
+      .preview-grid { grid-template-columns: repeat(3, 1fr); }
+      .preview-img:nth-child(n + 4) { display: none; }
+    }
+  </style>
+</BaseLayout>

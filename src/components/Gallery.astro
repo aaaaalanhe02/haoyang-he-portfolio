@@ -1,0 +1,177 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  images: ImageMetadata[];
+  altPrefix: string;
+  columns?: number;
+}
+const { images, altPrefix, columns = 3 } = Astro.props;
+
+// 为灯箱预生成较大尺寸的 WebP（缩略图由 <Image> 生成小尺寸）
+const large = await Promise.all(
+  images.map((src) => getImage({ src, width: 1600, format: 'webp' })),
+);
+---
+
+<!-- 每个画廊自带一个灯箱，彼此独立，避免同页多画廊互相干扰 -->
+<div class="gallery-root" data-gallery-root>
+  <div class="gallery" style={`--cols:${columns}`}>
+    {
+      images.map((img, i) => (
+        <a
+          class="gallery-item"
+          href={large[i].src}
+          data-full={large[i].src}
+          aria-label={`Open image ${i + 1} of ${images.length}`}
+        >
+          <Image
+            src={img}
+            alt={`${altPrefix} — ${i + 1}`}
+            widths={[300, 600]}
+            sizes="(max-width: 700px) 50vw, 300px"
+            loading="lazy"
+          />
+        </a>
+      ))
+    }
+  </div>
+
+  <div class="lightbox" data-lightbox hidden aria-hidden="true">
+    <button class="lb-close" data-lb-close aria-label="Close">✕</button>
+    <button class="lb-nav lb-prev" data-lb-prev aria-label="Previous">❮</button>
+    <img class="lb-img" data-lb-img alt="" />
+    <button class="lb-nav lb-next" data-lb-next aria-label="Next">❯</button>
+    <p class="lb-count" data-lb-count></p>
+  </div>
+</div>
+
+<script>
+  // 轻量灯箱：每个画廊独立初始化；模块级 `current` 只跟踪当前打开的那个，
+  // 因此全局键盘事件（← → Esc）永远只作用于正在显示的画廊。
+  type Controller = { next: () => void; prev: () => void; close: () => void };
+  let current: Controller | null = null;
+
+  document.addEventListener('keydown', (e) => {
+    if (!current) return;
+    if (e.key === 'Escape') current.close();
+    else if (e.key === 'ArrowLeft') current.prev();
+    else if (e.key === 'ArrowRight') current.next();
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-gallery-root]').forEach((root) => {
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.gallery-item'));
+    const box = root.querySelector<HTMLElement>('[data-lightbox]');
+    if (!box || links.length === 0) return;
+    const imgEl = box.querySelector<HTMLImageElement>('[data-lb-img]')!;
+    const countEl = box.querySelector<HTMLElement>('[data-lb-count]')!;
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + links.length) % links.length;
+      imgEl.src = links[index].dataset.full ?? '';
+      countEl.textContent = `${index + 1} / ${links.length}`;
+    };
+    const close = () => {
+      box.hidden = true;
+      box.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      imgEl.src = '';
+      if (current === ctrl) current = null;
+    };
+    const ctrl: Controller = { next: () => show(index + 1), prev: () => show(index - 1), close };
+    const open = (i: number) => {
+      box.hidden = false;
+      box.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      current = ctrl;
+      show(i);
+    };
+
+    links.forEach((link, i) =>
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        open(i);
+      }),
+    );
+    box.querySelector('[data-lb-close]')!.addEventListener('click', close);
+    box.querySelector('[data-lb-prev]')!.addEventListener('click', ctrl.prev);
+    box.querySelector('[data-lb-next]')!.addEventListener('click', ctrl.next);
+    box.addEventListener('click', (e) => {
+      if (e.target === box) close();
+    });
+  });
+</script>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
+    gap: 0.6rem;
+  }
+  .gallery-item {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--bg-alt);
+  }
+  .gallery-item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .gallery-item:hover :global(img) { transform: scale(1.05); }
+
+  @media (max-width: 700px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: clamp(0.75rem, 3vw, 2.5rem);
+    background: rgba(8, 10, 14, 0.92);
+  }
+  .lightbox[hidden] { display: none; }
+  .lb-img {
+    grid-column: 2;
+    justify-self: center;
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+  .lb-close,
+  .lb-nav {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .lb-close { position: absolute; top: 1rem; right: 1rem; width: 42px; height: 42px; }
+  .lb-nav { width: 46px; height: 46px; }
+  .lb-close:hover,
+  .lb-nav:hover { background: rgba(255, 255, 255, 0.25); }
+  .lb-count {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 560px) {
+    .lb-nav { width: 38px; height: 38px; font-size: 1.1rem; }
+  }
+</style>

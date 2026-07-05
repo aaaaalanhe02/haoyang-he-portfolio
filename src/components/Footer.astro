@@ -1,0 +1,41 @@
+---
+import { SITE, NAV, withBase } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <p class="footer-name">{SITE.name} <span class="muted">({SITE.nickname})</span></p>
+      <p class="muted">{SITE.role} · {SITE.location}</p>
+    </div>
+
+    <nav class="footer-links" aria-label="Footer">
+      {NAV.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
+      <a href={`mailto:${SITE.email}`}>Email</a>
+      <a href={withBase('/docs/CV.pdf')}>CV</a>
+    </nav>
+  </div>
+  <p class="container footer-fine muted">© {year} {SITE.name}. Built with Astro.</p>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg-alt);
+    padding-block: 2rem 1.5rem;
+    margin-top: 2rem;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-name { font-weight: 700; color: var(--text-strong); }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .footer-links a { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+  .footer-links a:hover { color: var(--accent-strong); }
+  .footer-fine { margin-top: 1.5rem; font-size: 0.85rem; }
+</style>

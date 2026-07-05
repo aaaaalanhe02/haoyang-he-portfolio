@@ -1,0 +1,23 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# 原始素材真源（体量大、含 HEIC/MOV，不入库；用 scripts/ 转码后进 src/assets 与 public）
+raw-assets/
+
+# generated types
+.astro/
+
+# environment
+.env
+.env.production
+
+# macOS / editor
+.DS_Store
+*.log
+
+# scratch
+/tmp/

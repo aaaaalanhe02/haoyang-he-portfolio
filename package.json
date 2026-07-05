@@ -1,0 +1,22 @@
+{
+  "name": "personal-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Haoyang (Alan) He — personal portfolio site (Astro)",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "assets": "bash scripts/convert-assets.sh",
+    "videos": "bash scripts/convert-videos.sh"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.0",
+    "@astrojs/sitemap": "^3.2.0",
+    "astro": "^5.6.0",
+    "sharp": "^0.33.5"
+  }
+}

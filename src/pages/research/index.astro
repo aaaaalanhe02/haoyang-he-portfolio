@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Research"
+  description="Research and engineering projects — perovskite optoelectronics, biofilm and blood rheology, thin-film fabrication, and a student-built Hyperloop pod."
+>
+  <section class="container section">
+    <p class="eyebrow">Research · Engineering · Data</p>
+    <h1 class="page-title">Projects</h1>
+    <p class="lead page-intro">
+      Most of my work asks the same question in different materials: how does something
+      behave, and why? These span perovskite optoelectronics, the rheology of biofilms
+      and blood, thin-film fabrication, a Hyperloop pod shell, and a bit of data analysis.
+    </p>
+
+    <div class="card-grid">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <style>
+    .page-title { font-size: var(--step-6); margin-block: 0.2rem 0.6rem; }
+    .page-intro { max-width: 60ch; margin-bottom: 2rem; }
+  </style>
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '../components/Gallery.astro';
+import { getGallery } from '../lib/galleries';
+
+const sections = [
+  {
+    slug: 'kilimanjaro',
+    title: 'Mount Kilimanjaro',
+    emoji: '🏔️',
+    blurb:
+      "Africa's highest peak, 5,895 m. Six days up through five climate zones to stand on the roof of the continent at sunrise.",
+  },
+  {
+    slug: 'tmb',
+    title: 'Tour du Mont Blanc',
+    emoji: '🥾',
+    blurb:
+      'The classic ~170 km circuit around the Mont Blanc massif, crossing France, Italy and Switzerland on foot.',
+  },
+  {
+    slug: 'climbing',
+    title: 'Climbing',
+    emoji: '🧗',
+    blurb: 'Rock and alpine climbing — the best kind of problem-solving with real consequences.',
+  },
+].map((s) => ({ ...s, images: getGallery(s.slug) }));
+---
+
+<BaseLayout
+  title="Adventures"
+  description="Mountaineering and climbing — Kilimanjaro, the Tour du Mont Blanc, and time on the rock."
+>
+  <section class="container section">
+    <p class="eyebrow">Beyond the lab</p>
+    <h1 class="page-title">Adventures</h1>
+    <p class="lead page-intro">
+      Physics pays the rent; mountains keep me sane. A few of the places altitude has
+      taken me.
+    </p>
+  </section>
+
+  {
+    sections.map((s) => (
+      <section class="container section adv">
+        <h2 class="section-title"><span class="ico">{s.emoji}</span> {s.title}</h2>
+        <p class="muted adv-blurb">{s.blurb}</p>
+        {s.images.length > 0 ? (
+          <Gallery images={s.images} altPrefix={s.title} columns={3} />
+        ) : (
+          <p class="muted">Photos coming soon.</p>
+        )}
+      </section>
+    ))
+  }
+
+  <style>
+    .page-title { font-size: var(--step-6); margin-block: 0.2rem 0.6rem; }
+    .page-intro { max-width: 55ch; }
+    .adv-blurb { max-width: 60ch; margin-bottom: 1.2rem; }
+  </style>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+---
+
+<BaseLayout
+  title="Music"
+  description="Drummer in a thrash-metal band — the loud counterweight to lab work."
+>
+  <section class="container section music">
+    <p class="eyebrow">Off the clock</p>
+    <h1 class="page-title">Drums</h1>
+    <p class="lead page-intro">
+      When I'm not fitting transport models or chasing rheometry data, I'm behind a drum
+      kit in a thrash-metal band. Fast tempos, loud rooms, and the most honest feedback
+      loop I know — you either lock in or you don't.
+    </p>
+
+    <VideoEmbed src="band.mp4" caption="Live cut — thrash-metal set." />
+  </section>
+
+  <style>
+    .music { max-width: 820px; }
+    .page-title { font-size: var(--step-6); margin-block: 0.2rem 0.6rem; }
+    .page-intro { max-width: 60ch; margin-bottom: 2rem; }
+  </style>
+</BaseLayout>
