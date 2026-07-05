@@ -5,6 +5,12 @@ import { skills } from '../lib/cv';
 
 const certificates = [
   {
+    name: 'MySQL for Data Analytics',
+    issuer: 'Analyst Builder',
+    date: 'Jul 2026',
+    file: '/docs/mysql-certificate.png',
+  },
+  {
     name: 'Supervised Machine Learning: Regression and Classification',
     issuer: 'DeepLearning.AI & Stanford University (Andrew Ng)',
     date: 'Sep 2025',
@@ -99,7 +105,7 @@ const certificates = [
               <div class="cert-side">
                 <span class="muted cert-date">{c.date}</span>
                 <span class="cert-actions">
-                  <a href={withBase(c.file)} target="_blank" rel="noopener">PDF</a>
+                  <a href={withBase(c.file)} target="_blank" rel="noopener">View</a>
                   {c.verify && (
                     <a href={c.verify} target="_blank" rel="noopener">Verify</a>
                   )}

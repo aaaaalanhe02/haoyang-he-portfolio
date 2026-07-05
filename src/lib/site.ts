@@ -25,10 +25,9 @@ export const GROUP = {
 export const NAV: { label: string; href: string; id: string }[] = [
   { label: 'Home', href: '/#home', id: 'home' },
   { label: 'Interests', href: '/#interests', id: 'interests' },
-  { label: 'Work', href: '/#projects', id: 'projects' },
+  { label: 'Experience', href: '/#projects', id: 'projects' },
   { label: 'Skills', href: '/#skills', id: 'skills' },
   { label: 'Education', href: '/#education', id: 'education' },
-  { label: 'Experience', href: '/#experience', id: 'experience' },
   { label: 'Photography', href: '/#photography', id: 'photography' },
   { label: 'Adventures', href: '/#adventures', id: 'adventures' },
   { label: 'About', href: '/#about', id: 'about' },

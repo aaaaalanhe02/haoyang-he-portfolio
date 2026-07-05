@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import { SITE, GROUP, withBase } from '../lib/site';
-import { education, experience, skills } from '../lib/cv';
+import { education, skills } from '../lib/cv';
 import { getGallery, getCover } from '../lib/galleries';
 import type { ImageMetadata } from 'astro';
 import uclLogo from '../assets/logos/ucl.png';
@@ -35,6 +35,7 @@ const researchInterests = [
 ];
 
 const certificates = [
+  { year: '2026', name: 'MySQL for Data Analytics', org: 'Analyst Builder', badge: 'SQL', file: '/docs/mysql-certificate.png' },
   { year: '2025', name: 'Supervised Machine Learning: Regression & Classification', org: 'DeepLearning.AI & Stanford (Andrew Ng)', badge: 'ML', file: '/docs/coursera-1.pdf', verify: 'https://coursera.org/verify/7QSU5D87HR7G' },
   { year: '2025', name: 'Business Analytics Specialization — 5 courses', org: 'The Wharton School, UPenn', badge: 'Data', file: '/docs/coursera-2.pdf' },
   { year: '2025', name: 'Tableau for Data Visualization', org: 'Coursera Project Network', badge: 'Viz', file: '/docs/tableau-certificate.pdf' },
@@ -105,7 +106,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
   <!-- ========================= SELECTED WORK ========================= -->
   <section id="projects" class="section">
     <div class="container">
-      <h2 class="section-title fade-in">Selected Work</h2>
+      <h2 class="section-title fade-in">Experience</h2>
       <p class="section-subtitle fade-in">Research, engineering and data projects — click any card for the full write-up.</p>
       <div class="card-grid fade-in">
         {projects.map((project) => <ProjectCard project={project} />)}
@@ -148,37 +149,6 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
     </div>
   </section>
 
-  <!-- ========================== EXPERIENCE ========================== -->
-  <section id="experience" class="section bg-light">
-    <div class="container">
-      <h2 class="section-title fade-in">Experience</h2>
-      <div class="experience-list">
-        {experience.map((x) => (
-          <article class="experience-item fade-in">
-            <div class="exp-badge">{orgLogos[x.org] ? <Image class="badge-logo" src={orgLogos[x.org]} alt={x.org} width={112} height={112} /> : <span class="logo-placeholder">{initials(x.org)}</span>}</div>
-            <div class="exp-content">
-              <div class="exp-header">
-                <h3>
-                  {x.project ? <a href={withBase(`/research/${x.project}`)}>{x.role}</a> : x.role}
-                </h3>
-                <span class="exp-period">{x.period}</span>
-              </div>
-              <p class="exp-org">
-                {x.org}
-                {x.groupName && (
-                  <> · <a href={x.groupHref} target="_blank" rel="noopener">{x.groupName}</a></>
-                )}
-              </p>
-              <ul class="exp-points">
-                {x.points.map((p) => <li>{p}</li>)}
-              </ul>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- ========================= CERTIFICATES ========================= -->
   <section id="certificates" class="section">
     <div class="container">
@@ -191,7 +161,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
               <h3>{c.name}</h3>
               <p class="award-org">{c.org} · {c.year}</p>
               <p class="award-links">
-                <a href={withBase(c.file)} target="_blank" rel="noopener">PDF ↗</a>
+                <a href={withBase(c.file)} target="_blank" rel="noopener">View ↗</a>
                 {c.verify && <a href={c.verify} target="_blank" rel="noopener">Verify ↗</a>}
               </p>
             </div>

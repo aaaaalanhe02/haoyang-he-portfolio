@@ -70,5 +70,10 @@ cp -f "$RAW/UCL project/Literature_Review (6).pdf" "$DOCS/ucl-literature-review.
 cp -f "$RAW/certificate/Coursera 7QSU5D87HR7G.pdf" "$DOCS/coursera-1.pdf"
 cp -f "$RAW/certificate/Coursera BZRFLP8Y4U1X.pdf" "$DOCS/coursera-2.pdf"
 cp -f "$RAW/certificate/Haoyang He - Tableau for Data Visualization Certificate.pdf" "$DOCS/tableau-certificate.pdf"
+cp -f "$RAW/certificate/Haoyang He - MySQL for Data Analytics Certificate.png" "$DOCS/mysql-certificate.png"
+# 项目封面（单独指定的图，非画廊序号）
+mkdir -p "$ROOT/src/assets/covers"
+sips -s format jpeg -Z 1500 "$RAW/Nanjing University Intern/IMG_5439.HEIC" --out "$ROOT/src/assets/covers/nanjing.jpg" >/dev/null 2>&1
+sips -s format jpeg -Z 1500 "$RAW/HYPED/IMG_4308.HEIC" --out "$ROOT/src/assets/covers/hyped.jpg" >/dev/null 2>&1
 ls "$DOCS"
 echo "==> 完成。"
