@@ -6,13 +6,13 @@ export const education = [
     degree: 'MSc Advanced Materials Science',
     org: 'University College London',
     period: '2025 – 2026',
-    note: 'Predicted Distinction · Sustainability & materials-innovation focus',
+    note: 'Predicted Distinction · Nanoscale Characterization, Biosensors, Microstructural Control, Material Processing',
   },
   {
     degree: 'BSc Physics',
     org: 'University of Edinburgh',
     period: '2021 – 2025',
-    note: 'Second Class Honours · Microstructural control, nanoscale processing, condensed matter',
+    note: 'Second Class Honours · Condensed Matter Physics, Quantum Physics, Statistics',
   },
 ];
 
