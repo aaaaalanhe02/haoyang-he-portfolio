@@ -13,6 +13,12 @@ const sections = [
       "Africa's highest peak, 5,895 m. Six days up through five climate zones to stand on the roof of the continent at sunrise.",
   },
   {
+    slug: 'aotaina',
+    title: 'Mount Aotaina',
+    emoji: '🗻',
+    blurb: '',
+  },
+  {
     slug: 'tmb',
     title: 'Tour du Mont Blanc',
     emoji: '🥾',
@@ -46,7 +52,7 @@ const sections = [
     sections.map((s) => (
       <section class="container section adv">
         <h2 class="section-title"><span class="ico">{s.emoji}</span> {s.title}</h2>
-        <p class="muted adv-blurb">{s.blurb}</p>
+        {s.blurb && <p class="muted adv-blurb">{s.blurb}</p>}
         {s.images.length > 0 ? (
           <Gallery images={s.images} altPrefix={s.title} columns={3} />
         ) : (

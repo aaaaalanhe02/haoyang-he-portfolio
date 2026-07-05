@@ -15,6 +15,7 @@ MAXDIM=2400   # 长边像素上限（手机原图约 3024×4032，太大）
 map_slug() {
   case "$1" in
     "kilimanjaro")               echo "kilimanjaro" ;;
+    "aotaina")                   echo "aotaina" ;;
     "TMB")                       echo "tmb" ;;
     "climbing")                  echo "climbing" ;;
     "HYPED")                     echo "hyped" ;;
