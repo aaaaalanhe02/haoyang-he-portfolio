@@ -1,4 +1,5 @@
 // 首页学术主页用的结构化 CV 数据（来自 CV_V2.pdf）。改这里即可更新首页。
+import { GROUP } from './site';
 
 export const education = [
   {
@@ -22,6 +23,8 @@ export type ExperienceItem = {
   tag: string;
   points: string[];
   project?: string; // 对应 research 项目 slug，卡片可链接过去
+  groupName?: string; // 课题组（如 FMED）
+  groupHref?: string;
 };
 
 export const experience: ExperienceItem[] = [
@@ -31,6 +34,8 @@ export const experience: ExperienceItem[] = [
     period: 'Nov 2025 – Present',
     tag: 'Research',
     project: 'perovskite-optoelectronics',
+    groupName: GROUP.name,
+    groupHref: GROUP.href,
     points: [
       'Investigating how bias-induced ion migration affects internal fields, charge extraction and hysteresis in perovskite optoelectronic devices.',
       'Building Python-based ionic–electronic transport models with nonlinear fitting to extract ionic relaxation times.',

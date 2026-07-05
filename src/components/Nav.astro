@@ -1,138 +1,184 @@
 ---
-import { SITE, NAV, withBase, isActive } from '../lib/site';
+import { SITE, NAV, withBase } from '../lib/site';
 
 interface Props {
   currentPath: string;
 }
 const { currentPath } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const isHome = currentPath === '/' || currentPath === base || currentPath === `${base}`;
 ---
 
 <header class="site-header">
-  <nav class="container nav" aria-label="Primary">
-    <a class="brand" href={withBase('/')}>
-      <span class="brand-mark" aria-hidden="true">HH</span>
-      <span class="brand-name">{SITE.name}</span>
-    </a>
+  <nav class="nav-container" aria-label="Primary">
+    <a class="nav-brand" href={withBase('/#home')}>{SITE.name}</a>
 
-    <ul class="nav-links">
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-menu">
       {
         NAV.map((item) => (
           <li>
-            <a
-              href={withBase(item.href)}
-              aria-current={isActive(currentPath, item.href) ? 'page' : undefined}
-            >
+            <a class="nav-link" href={withBase(item.href)} data-nav-id={item.id}>
               {item.label}
             </a>
           </li>
         ))
       }
     </ul>
-
-    <button
-      id="theme-toggle"
-      class="theme-toggle"
-      type="button"
-      aria-label="Toggle colour theme"
-      title="Toggle light / dark"
-    >
-      <span class="theme-toggle__icon" aria-hidden="true">◐</span>
-    </button>
   </nav>
 </header>
 
-<script is:inline>
-  (function () {
-    const btn = document.getElementById('theme-toggle');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      const root = document.documentElement;
-      const current =
-        root.getAttribute('data-theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      const next = current === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try {
-        localStorage.setItem('theme', next);
-      } catch (e) {}
+{
+  isHome && (
+    <nav class="side-nav" aria-label="Section navigation">
+      {NAV.filter((n) => n.id !== 'home').map((item) => (
+        <a href={withBase(item.href)} data-nav-id={item.id}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  )
+}
+
+<script>
+  // 汉堡菜单
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const menu = document.querySelector<HTMLElement>('.nav-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('active');
+      toggle.classList.toggle('active', open);
+      toggle.setAttribute('aria-expanded', String(open));
     });
-  })();
+    menu.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => {
+        menu.classList.remove('active');
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+      }),
+    );
+  }
+
+  // scrollspy：高亮当前 section 对应的顶部导航与 side-nav
+  const links = Array.from(document.querySelectorAll<HTMLElement>('[data-nav-id]'));
+  const byId = new Map<string, HTMLElement[]>();
+  links.forEach((l) => {
+    const id = l.dataset.navId!;
+    byId.set(id, [...(byId.get(id) ?? []), l]);
+  });
+  const sections = document.querySelectorAll<HTMLElement>('main section[id]');
+  if (sections.length) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const targets = byId.get(e.target.id);
+          if (!targets || targets.length === 0) return; // 无对应导航项的 section 保持上一个高亮
+          links.forEach((l) => l.classList.remove('active'));
+          targets.forEach((l) => l.classList.add('active'));
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    sections.forEach((s) => spy.observe(s));
+  }
 </script>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: saturate(150%) blur(10px);
-    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    background: color-mix(in srgb, var(--color-white) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(10px);
+    -webkit-backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
   }
-  .nav {
+  .nav-container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 1rem var(--spacing-md);
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    padding-block: 0.75rem;
-    flex-wrap: wrap;
   }
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-weight: 700;
-    color: var(--text-strong);
-  }
-  .brand:hover { text-decoration: none; color: var(--text-strong); }
-  .brand-mark {
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.8rem;
-    letter-spacing: 0.02em;
-  }
-  .brand-name { font-size: 1.02rem; }
-  .nav-links {
-    display: flex;
-    gap: 0.35rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    margin-left: auto;
-    flex-wrap: wrap;
-  }
-  .nav-links a {
-    display: inline-block;
-    padding: 0.35rem 0.7rem;
-    border-radius: 8px;
-    color: var(--muted);
+  .nav-brand {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
     font-weight: 600;
-    font-size: 0.95rem;
+    color: var(--color-primary);
   }
-  .nav-links a:hover { color: var(--accent-strong); background: var(--bg-alt); text-decoration: none; }
-  .nav-links a[aria-current='page'] { color: var(--accent-strong); background: var(--accent-soft); }
-  .theme-toggle {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1;
+  .nav-brand:hover { color: var(--color-primary); }
+  .nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.6rem;
+    margin: 0;
+    padding: 0;
   }
-  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-link {
+    position: relative;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    padding: 0.4rem 0;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover { color: var(--color-primary); }
+  .nav-link:hover::after,
+  .nav-link.active::after { width: 100%; }
+  .nav-link.active { color: var(--color-primary); }
 
-  @media (max-width: 560px) {
-    .brand-name { display: none; }
-    .nav-links { margin-left: 0; }
-    .nav { justify-content: space-between; }
-    .nav-links { order: 3; width: 100%; justify-content: center; }
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .nav-toggle span {
+    width: 25px;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition: var(--transition-smooth);
+  }
+  .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 860px) {
+    .nav-toggle { display: flex; }
+    .nav-menu {
+      position: fixed;
+      top: 64px;
+      left: -100%;
+      width: min(78%, 320px);
+      height: calc(100vh - 64px);
+      flex-direction: column;
+      gap: 0.5rem;
+      background: color-mix(in srgb, var(--color-white) 96%, transparent);
+      backdrop-filter: blur(12px);
+      padding: var(--spacing-md);
+      box-shadow: 6px 0 24px rgba(0, 0, 0, 0.12);
+      transition: left 0.3s ease;
+    }
+    .nav-menu.active { left: 0; }
+    .nav-link { font-size: 1.15rem; display: block; padding: 0.5rem 0; }
   }
 </style>

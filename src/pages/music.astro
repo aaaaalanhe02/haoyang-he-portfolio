@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
+import { withBase } from '../lib/site';
 ---
 
 <BaseLayout
@@ -8,6 +9,7 @@ import VideoEmbed from '../components/VideoEmbed.astro';
   description="Drummer in a thrash-metal band — the loud counterweight to lab work."
 >
   <section class="container section music">
+    <a class="back-home" href={withBase('/#home')}>← Home</a>
     <p class="eyebrow">Off the clock</p>
     <h1 class="page-title">Drums</h1>
     <p class="lead page-intro">

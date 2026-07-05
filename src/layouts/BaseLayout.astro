@@ -1,4 +1,10 @@
 ---
+// 自托管字体（等同案例的 Google Fonts：Crimson Text + Lato），无外链
+import '@fontsource/crimson-text/400.css';
+import '@fontsource/crimson-text/600.css';
+import '@fontsource/lato/300.css';
+import '@fontsource/lato/400.css';
+import '@fontsource/lato/700.css';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -13,11 +19,11 @@ const { title, description = SITE.tagline } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
 const currentPath = Astro.url.pathname;
 
-// 内联 SVG favicon：学术蓝圆底 + 白色首字母
+// 内联 SVG favicon：案例蓝灰底 + 白色首字母
 const favicon =
-  "data:image/svg+xml," +
+  'data:image/svg+xml,' +
   encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='#1f5fbf'/><text x='50%' y='54%' dy='.34em' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-size='34' font-weight='700' fill='#fff'>H</text></svg>`,
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='#2c3e50'/><text x='50%' y='54%' dy='.34em' text-anchor='middle' font-family='Georgia,serif' font-size='34' font-weight='700' fill='#fff'>H</text></svg>`,
   );
 ---
 
@@ -34,17 +40,6 @@ const favicon =
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <!-- 尽早设定主题，避免暗色模式闪烁 -->
-    <script is:inline>
-      (function () {
-        try {
-          const saved = localStorage.getItem('theme');
-          if (saved === 'dark' || saved === 'light') {
-            document.documentElement.setAttribute('data-theme', saved);
-          }
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -54,12 +49,46 @@ const favicon =
     </main>
     <Footer />
 
+    <button class="back-to-top" aria-label="Back to top" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+    </button>
+
+    <script>
+      // 进入视口淡入
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
+      );
+      document.querySelectorAll('.fade-in').forEach((el) => io.observe(el));
+
+      // 回到顶部
+      const btt = document.querySelector('.back-to-top');
+      if (btt) {
+        window.addEventListener(
+          'scroll',
+          () => btt.classList.toggle('show', window.scrollY > 400),
+          { passive: true },
+        );
+        btt.addEventListener('click', () =>
+          window.scrollTo({ top: 0, behavior: 'smooth' }),
+        );
+      }
+    </script>
+
     <style>
       .skip-link {
         position: absolute;
         left: -9999px;
         top: 0;
-        background: var(--accent);
+        background: var(--color-accent);
         color: #fff;
         padding: 0.6rem 1rem;
         z-index: 100;

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Gallery from '../components/Gallery.astro';
 import { getGallery } from '../lib/galleries';
+import { withBase } from '../lib/site';
 
 const sections = [
   {
@@ -32,6 +33,7 @@ const sections = [
   description="Mountaineering and climbing — Kilimanjaro, the Tour du Mont Blanc, and time on the rock."
 >
   <section class="container section">
+    <a class="back-home" href={withBase('/#home')}>← Home</a>
     <p class="eyebrow">Beyond the lab</p>
     <h1 class="page-title">Adventures</h1>
     <p class="lead page-intro">

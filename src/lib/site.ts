@@ -4,6 +4,7 @@ export const SITE = {
   name: 'Haoyang He',
   nickname: 'Alan',
   role: 'Materials Science Researcher',
+  affiliation: 'MSc Advanced Materials Science · University College London',
   tagline:
     'MSc Advanced Materials Science @ UCL. I study how materials behave — from perovskite optoelectronics to biofilm rheology — and I climb mountains and play drums in between.',
   location: 'London, UK',
@@ -11,29 +12,33 @@ export const SITE = {
   altEmail: 'aaaaalanhe02@gmail.com',
 } as const;
 
-// 主导航（首页由左上角名字链接，故不单列 Home）
-export const NAV: { label: string; href: string }[] = [
-  { label: 'Research', href: '/research' },
-  { label: 'Photography', href: '/photography' },
-  { label: 'Adventures', href: '/adventures' },
-  { label: 'Music', href: '/music' },
-  { label: 'About', href: '/about' },
+// UCL 硕士课题组（FMED）
+export const GROUP = {
+  name: 'Functional Materials & Energy Devices (FMED)',
+  short: 'FMED group, UCL',
+  lead: 'Dr Mojtaba Abdi-Jalebi',
+  href: 'https://www.ucl.ac.uk/mathematical-physical-sciences/functional-materials-and-energy-devices-group-fmed',
+} as const;
+
+// 单页锚点导航（顶部 + 左侧 side-nav 共用）。href 指向首页对应 section；
+// 在子页点击会先回首页再滚到锚点。
+export const NAV: { label: string; href: string; id: string }[] = [
+  { label: 'Home', href: '/#home', id: 'home' },
+  { label: 'Interests', href: '/#interests', id: 'interests' },
+  { label: 'Work', href: '/#projects', id: 'projects' },
+  { label: 'Skills', href: '/#skills', id: 'skills' },
+  { label: 'Education', href: '/#education', id: 'education' },
+  { label: 'Experience', href: '/#experience', id: 'experience' },
+  { label: 'Photography', href: '/#photography', id: 'photography' },
+  { label: 'Adventures', href: '/#adventures', id: 'adventures' },
+  { label: 'About', href: '/#about', id: 'about' },
 ];
 
-// base 路径无关的链接拼接：所有站内链接 / public 资源都经过它，
-// 这样 astro.config 的 base 从 '/' 改成 '/repo' 时无需逐个改链接。
-const RAW_BASE = import.meta.env.BASE_URL; // 例如 '/' 或 '/personal-web/'
+// base 路径无关的链接拼接
+const RAW_BASE = import.meta.env.BASE_URL;
 export function withBase(path: string): string {
   const base = RAW_BASE.endsWith('/') ? RAW_BASE.slice(0, -1) : RAW_BASE;
   const p = path.startsWith('/') ? path : `/${path}`;
   const joined = `${base}${p}`;
   return joined === '' ? '/' : joined;
-}
-
-// 判断当前路径是否落在某个导航板块内（用于高亮）
-export function isActive(currentPath: string, href: string): boolean {
-  const cur = currentPath.replace(RAW_BASE, '/').replace(/\/+$/, '') || '/';
-  const target = href.replace(/\/+$/, '') || '/';
-  if (target === '/') return cur === '/';
-  return cur === target || cur.startsWith(`${target}/`);
 }

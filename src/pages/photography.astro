@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Gallery from '../components/Gallery.astro';
 import { getGallery } from '../lib/galleries';
+import { withBase } from '../lib/site';
 
 const photos = getGallery('photography');
 ---
@@ -11,6 +12,7 @@ const photos = getGallery('photography');
   description="A gallery of photographs — mountains, travel and the moments in between."
 >
   <section class="container container--wide section">
+    <a class="back-home" href={withBase('/#home')}>← Home</a>
     <p class="eyebrow">Through the lens</p>
     <h1 class="page-title">Photography</h1>
     <p class="lead page-intro">
