@@ -11,6 +11,7 @@ import type { ImageMetadata } from 'astro';
 import uclLogo from '../assets/logos/ucl.png';
 import ediLogo from '../assets/logos/edinburgh.png';
 import njuLogo from '../assets/logos/nanjing.png';
+import appQr from '../assets/app/qr.png';
 
 // 机构 → 校徽（Education / Experience 时间线用；无匹配则回退首字母徽标）
 const orgLogos: Record<string, ImageMetadata> = {
@@ -236,8 +237,46 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
     </div>
   </section>
 
+  <!-- =========================== CLIMBING APP =========================== -->
+  <section id="app" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title fade-in">Climbing App</h2>
+      <p class="section-subtitle fade-in">A side project I vibe-coded — log your climbs and watch your grade pyramid grow.</p>
+      <div class="app-grid fade-in">
+        <div class="app-copy">
+          <p>
+            A mobile app for climbing-gym members in the UK. Log every ascent —
+            <strong>flash</strong>, <strong>send</strong>, <strong>redpoint</strong> — and it builds
+            your <strong>grade pyramid</strong> and stats automatically, with official route info
+            straight from the gym.
+          </p>
+          <p class="muted">
+            Built solo with AI pair-programming: <strong>Expo (React Native)</strong> on the front,
+            <strong>Supabase</strong> (Postgres, Auth, row-level security) on the back. It's an early
+            beta, with a first pilot gym in London in the works.
+          </p>
+          <ul class="tags app-tags">
+            <li class="tag">Expo / React Native</li>
+            <li class="tag">Supabase</li>
+            <li class="tag">TypeScript</li>
+            <li class="tag tag--accent">Vibe-coded</li>
+          </ul>
+          <a class="btn btn--primary" href="https://climbing-app.expo.app" target="_blank" rel="noopener">Open the app ↗</a>
+        </div>
+        <figure class="app-qr">
+          <Image src={appQr} alt="QR code to open the Climbing App" width={280} height={280} />
+          <figcaption>
+            <strong>Scan to try</strong>
+            <span class="muted">no download needed</span>
+            <a href="https://climbing-app.expo.app" target="_blank" rel="noopener">climbing-app.expo.app</a>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================= MUSIC ============================= -->
-  <section id="music" class="section bg-light">
+  <section id="music" class="section">
     <div class="container music-inner">
       <h2 class="section-title fade-in">Drums</h2>
       <p class="section-subtitle fade-in">Drummer in a thrash-metal band — the loud counterweight to lab work.</p>
@@ -246,7 +285,7 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
   </section>
 
   <!-- ============================ CONTACT ============================ -->
-  <section id="contact" class="section">
+  <section id="contact" class="section bg-light">
     <div class="container">
       <h2 class="section-title fade-in">Get in Touch</h2>
       <div class="contact-info fade-in">
@@ -371,6 +410,17 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
     @media (max-width: 700px) { .adventures-grid { grid-template-columns: 1fr; } .adventure-card { aspect-ratio: 16/10; } }
 
     /* ---------------- Music / About / Contact ---------------- */
+    /* climbing app */
+    .app-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: var(--spacing-lg); align-items: center; max-width: 1000px; margin: var(--spacing-lg) auto 0; }
+    .app-copy > * + * { margin-top: 1rem; }
+    .app-tags { margin-top: 0.4rem; }
+    .app-qr { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow-card); }
+    .app-qr :global(img) { width: 220px; height: auto; border-radius: 6px; }
+    .app-qr figcaption { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; }
+    .app-qr figcaption strong { color: var(--color-primary); font-size: 1.05rem; }
+    .app-qr figcaption a { font-size: 0.9rem; margin-top: 0.3rem; }
+    @media (max-width: 760px) { .app-grid { grid-template-columns: 1fr; } .app-qr { max-width: 320px; margin-inline: auto; } }
+
     .music-inner { max-width: 820px; }
     .about-content { max-width: var(--content); margin: 0 auto; font-size: 1.08rem; line-height: 1.9; text-align: justify; }
     .about-content p { margin-bottom: 1.3rem; }

@@ -31,6 +31,7 @@ export const NAV: { label: string; href: string; id: string }[] = [
   { label: 'Education', href: '/#education', id: 'education' },
   { label: 'Photography', href: '/#photography', id: 'photography' },
   { label: 'Adventures', href: '/#adventures', id: 'adventures' },
+  { label: 'App', href: '/#app', id: 'app' },
 ];
 
 // base 路径无关的链接拼接
