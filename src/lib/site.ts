@@ -24,13 +24,13 @@ export const GROUP = {
 // 在子页点击会先回首页再滚到锚点。
 export const NAV: { label: string; href: string; id: string }[] = [
   { label: 'Home', href: '/#home', id: 'home' },
+  { label: 'About', href: '/#about', id: 'about' },
   { label: 'Interests', href: '/#interests', id: 'interests' },
   { label: 'Experience', href: '/#projects', id: 'projects' },
   { label: 'Skills', href: '/#skills', id: 'skills' },
   { label: 'Education', href: '/#education', id: 'education' },
   { label: 'Photography', href: '/#photography', id: 'photography' },
   { label: 'Adventures', href: '/#adventures', id: 'adventures' },
-  { label: 'About', href: '/#about', id: 'about' },
 ];
 
 // base 路径无关的链接拼接
