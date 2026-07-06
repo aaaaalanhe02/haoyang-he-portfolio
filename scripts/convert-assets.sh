@@ -76,5 +76,9 @@ cp -f "$RAW/certificate/Haoyang He - MySQL for Data Analytics Certificate.png" "
 mkdir -p "$ROOT/src/assets/covers"
 sips -s format jpeg -Z 1500 "$RAW/Nanjing University Intern/IMG_5439.HEIC" --out "$ROOT/src/assets/covers/nanjing.jpg" >/dev/null 2>&1
 sips -s format jpeg -Z 1500 "$RAW/HYPED/IMG_4308.HEIC" --out "$ROOT/src/assets/covers/hyped.jpg" >/dev/null 2>&1
+# 攀岩 App 演示截图（Climbing App 分区）
+mkdir -p "$ROOT/src/assets/app"
+sips -s format jpeg -Z 1400 -s formatOptions 85 "$RAW/app/Climbing_demo.png" --out "$ROOT/src/assets/app/demo-log.jpg" >/dev/null 2>&1
+sips -s format jpeg -Z 1400 -s formatOptions 85 "$RAW/app/Climbing_demo2.png" --out "$ROOT/src/assets/app/demo-stats.jpg" >/dev/null 2>&1
 ls "$DOCS"
 echo "==> 完成。"

@@ -12,6 +12,8 @@ import uclLogo from '../assets/logos/ucl.png';
 import ediLogo from '../assets/logos/edinburgh.png';
 import njuLogo from '../assets/logos/nanjing.png';
 import appQr from '../assets/app/qr.png';
+import appDemoLog from '../assets/app/demo-log.jpg';
+import appDemoStats from '../assets/app/demo-stats.jpg';
 
 // 机构 → 校徽（Education / Experience 时间线用；无匹配则回退首字母徽标）
 const orgLogos: Record<string, ImageMetadata> = {
@@ -272,6 +274,16 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
           </figcaption>
         </figure>
       </div>
+      <div class="app-screens fade-in">
+        <figure>
+          <Image src={appDemoLog} alt="Climbing App — logging a climb (Warmup Traverse, send)" widths={[500, 900]} sizes="(max-width:700px) 100vw, 460px" />
+          <figcaption class="muted">Log a climb — flash, send, redpoint or attempt</figcaption>
+        </figure>
+        <figure>
+          <Image src={appDemoStats} alt="Climbing App — My Stats dashboard with grade pyramid" widths={[500, 900]} sizes="(max-width:700px) 100vw, 460px" />
+          <figcaption class="muted">My Stats — climbing profile and grade pyramid</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -420,6 +432,11 @@ const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('
     .app-qr figcaption strong { color: var(--color-primary); font-size: 1.05rem; }
     .app-qr figcaption a { font-size: 0.9rem; margin-top: 0.3rem; }
     @media (max-width: 760px) { .app-grid { grid-template-columns: 1fr; } .app-qr { max-width: 320px; margin-inline: auto; } }
+    .app-screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md); max-width: 1000px; margin: var(--spacing-lg) auto 0; }
+    .app-screens figure { margin: 0; }
+    .app-screens :global(img) { width: 100%; border-radius: 10px; border: 1px solid var(--color-border); box-shadow: var(--shadow-card); }
+    .app-screens figcaption { text-align: center; font-size: 0.9rem; margin-top: 0.6rem; }
+    @media (max-width: 700px) { .app-screens { grid-template-columns: 1fr; } }
 
     .music-inner { max-width: 820px; }
     .about-content { max-width: var(--content); margin: 0 auto; font-size: 1.08rem; line-height: 1.9; text-align: justify; }
