@@ -18,11 +18,11 @@ fi
 
 # 统一转码：最长边不超过 1280，crf 26，AAC 128k，faststart
 transcode() {
-  local in="$1" out="$2"
+  local in="$1" out="$2" pre="${3:-}"   # $3 可选：额外前置视频滤镜，如 "transpose=1," 表示顺时针旋转 90°
   echo "  -> $(basename "$out")"
   # -nostdin 关键：否则 ffmpeg 会吞掉 while-read 循环的 stdin，破坏后续文件名读取
   ffmpeg -nostdin -y -loglevel error -i "$in" \
-    -vf "scale=w='min(1280,iw)':h='min(1280,ih)':force_original_aspect_ratio=decrease,scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -vf "${pre}scale=w='min(1280,iw)':h='min(1280,ih)':force_original_aspect_ratio=decrease,scale=trunc(iw/2)*2:trunc(ih/2)*2" \
     -c:v libx264 -crf 26 -preset veryfast -pix_fmt yuv420p -movflags +faststart \
     -c:a aac -b:a 128k \
     "$out"
@@ -38,8 +38,8 @@ done < <(find "$RAW/HYPED" -maxdepth 1 -type f -iname '*.mov' -print0 | sort -z)
 echo "==> 乐队鼓手视频"
 transcode "$RAW/band/001_WC-EditVideo_1.MP4" "$OUT/band.mp4"
 
-echo "==> 血液流变实验视频（原 40MB，压制）"
-transcode "$RAW/Blood Rheology project/93c35e7cbaa97c4401eeb36f47a65a9a.mp4" "$OUT/blood-rheology.mp4"
+echo "==> 血液流变实验视频（原 40MB，压制，顺时针旋转 90°）"
+transcode "$RAW/Blood Rheology project/93c35e7cbaa97c4401eeb36f47a65a9a.mp4" "$OUT/blood-rheology.mp4" "transpose=1,"
 
 echo "==> 完成。产物："
 ls -lh "$OUT"
