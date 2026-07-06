@@ -9,8 +9,8 @@ import sitemap from '@astrojs/sitemap';
 // 站内链接和 PDF 都用 import.meta.env.BASE_URL 前缀（见 src/lib/site.ts 的 withBase），
 // 所以改 base 后无需逐个改链接。
 export default defineConfig({
-  site: 'https://alanhe.github.io',
-  base: '/',
+  site: 'https://aaaaalanhe02.github.io',
+  base: '/haoyang-he-portfolio',
   trailingSlash: 'ignore',
   integrations: [mdx(), sitemap()],
   image: {
