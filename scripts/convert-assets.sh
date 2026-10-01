@@ -65,7 +65,7 @@ done
 DOCS="$ROOT/public/docs"
 mkdir -p "$DOCS"
 echo "==> 复制 PDF 到 public/docs/"
-cp -f "$RAW/CV_V2.pdf" "$DOCS/CV.pdf"
+cp -f "$RAW/CV_Risk.pdf" "$DOCS/CV.pdf"   # 2026-10 起主站也用最新简历（旧 CV_V2.pdf 仍留在 raw-assets）
 cp -f "$RAW/Biofilm project/Senior_Honor_Project.pdf" "$DOCS/biofilm-honours-thesis.pdf"   # 2026-10 修订版（摘要措辞更新）
 cp -f "$RAW/UCL project/Literature_Review (6).pdf" "$DOCS/ucl-literature-review.pdf"
 cp -f "$RAW/certificate/Coursera 7QSU5D87HR7G.pdf" "$DOCS/coursera-1.pdf"
