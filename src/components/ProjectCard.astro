@@ -4,17 +4,21 @@ import type { CollectionEntry } from 'astro:content';
 import { withBase } from '../lib/site';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: CollectionEntry<'projects'> | CollectionEntry<'risk'>;
+  // 详情页路由前缀：主站 '/research'，risk 子站 '/risk/experience'
+  basePath?: string;
 }
-const { project } = Astro.props;
+const { project, basePath = '/research' } = Astro.props;
 const { title, subtitle, org, period, summary, cover, coverAlt, tags, category } =
   project.data;
-const href = withBase(`/research/${project.id}`);
+const href = withBase(`${basePath}/${project.id}`);
 
 const catLabel: Record<string, string> = {
   research: 'Research',
   engineering: 'Engineering',
   data: 'Data',
+  risk: 'Risk',
+  modelling: 'Modelling',
 };
 ---
 

@@ -9,6 +9,12 @@ researcher, mountaineer, drummer). Deployed to **GitHub Pages**. Design is delib
 minimal/academic (single accent blue, sans-serif system fonts, generous whitespace),
 modeled loosely on `choraschan.github.io`.
 
+The same build also ships a **second, recruiter-facing site at `/risk/`** aimed at Financial
+Risk Analyst roles: same design system and components, its own nav, hero, copy and case
+studies (sourced from the risk-focused CV, `raw-assets/CV_Risk.pdf`). Nothing on `/risk/`
+links into the main site's nav except the footer "Research portfolio" link and the Beyond
+the Numbers cards (→ `/adventures`, `/music`).
+
 ## Commands
 
 ```bash
@@ -36,6 +42,11 @@ Flow: `raw-assets/` (git-ignored source of truth) → conversion scripts → com
 - `scripts/convert-videos.sh` — uses `ffmpeg` to transcode MOV/MP4 → web H.264 MP4 into
   `public/videos/`. **The `-nostdin` flag on ffmpeg is required** — without it ffmpeg eats the
   `while read` loop's stdin and corrupts subsequent filenames.
+- `/risk/` assets: `convert-assets.sh` also copies the risk CV + Goldman Sachs/Forage and
+  IOM3 FMEA certificates into `public/docs/` and derives `public/hero-bg-risk.jpg` from
+  `photography-10`; `convert-videos.sh` grabs the Drums still (`src/assets/band/band-01.jpg`)
+  from the band video; `node scripts/make-risk-cover.mjs` renders the risk-matrix card cover
+  (`src/assets/risk/risk-simulation-cover.png`) from an SVG via sharp.
 
 `raw-assets/` is `.gitignore`d; the converted outputs in `src/assets/` and `public/` ARE
 committed, so CI/GitHub Pages builds without needing the originals. To add new photos: drop
@@ -48,7 +59,11 @@ them in the relevant `raw-assets/` folder and re-run `npm run assets` (and `npm 
 Frontmatter drives everything; MDX body is just prose. Key fields:
 - `cover` (image() — relative path into `src/assets/…`), `gallery` (a `src/assets/` subdir
   slug — detail page loads the whole folder), `videos` (filenames in `public/videos/`),
-  `links`, `category` (`research|engineering|data`), `order`, `featured`.
+  `links`, `category` (`research|engineering|data|risk|modelling`), `order`, `featured`.
+
+**Content collection `risk`** (`src/content/risk/*.mdx`) shares the same schema (`workSchema`)
+and holds the `/risk/` case studies: the same experiences rewritten for a risk audience, each
+ending in a "Risk lens" section. Keep their facts in line with the risk CV.
 
 **Routing / section map:**
 - `/` — `src/pages/index.astro`: single-column academic homepage (hero → Interests →
@@ -57,11 +72,21 @@ Frontmatter drives everything; MDX body is just prose. Key fields:
 - `/research` + `/research/[...slug]` — project list + detail (renders MDX, gallery, videos, docs).
 - `/photography` — full gallery (a `src/assets/photography/` folder of ~58 photos).
 - `/adventures`, `/music`, `/about`, `/404`.
+- `/risk` — `src/pages/risk/index.astro`: the Financial Risk Analyst one-pager (hero → About →
+  Focus Areas → Experience cards → From Lab to Risk → Skills → Education → Certificates →
+  Beyond the Numbers → Contact). Data from `src/lib/risk.ts`; section styles are a scoped copy
+  of the main homepage's, so the two can be tweaked independently.
+- `/risk/experience/[...slug]` — risk case-study detail pages (same layout as `/research/…`).
 
 **Shared helpers:**
-- `src/lib/site.ts` — `SITE` constants, `NAV`, and `withBase(path)`. **All internal links and
-  `public/` asset URLs must go through `withBase`** so the site works regardless of the
-  `base` path (see deployment).
+- `src/lib/site.ts` — `SITE` constants, `NAV`, `withBase(path)`, and the `Profile` type +
+  `MAIN_PROFILE`. **All internal links and `public/` asset URLs must go through `withBase`** so
+  the site works regardless of the `base` path (see deployment).
+- `src/lib/risk.ts` — `RISK_PROFILE` / `RISK_NAV` and all structured content for `/risk/`.
+- A `Profile` is one site identity (name, role, email, CV path, home path, nav). `BaseLayout`
+  takes an optional `profile` prop (default `MAIN_PROFILE`) and passes it to `Nav`/`Footer`;
+  the left side-nav only renders on `profile.home`. `ProjectCard` takes a `basePath` for its
+  detail-page route (default `/research`). With no props, main-site output is unchanged.
 - `src/lib/galleries.ts` — `getGallery(slug)` / `getCover(slug)` eager-glob `src/assets/**`
   and return `ImageMetadata[]` for `<Image>`/`<Gallery>`.
 - `src/lib/cv.ts` — education, experience, skills, interests for the homepage.

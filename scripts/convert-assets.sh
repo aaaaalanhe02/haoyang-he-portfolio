@@ -66,12 +66,18 @@ DOCS="$ROOT/public/docs"
 mkdir -p "$DOCS"
 echo "==> 复制 PDF 到 public/docs/"
 cp -f "$RAW/CV_V2.pdf" "$DOCS/CV.pdf"
-cp -f "$RAW/Biofilm project/Senior_Honor_Project_4.pdf" "$DOCS/biofilm-honours-thesis.pdf"
+cp -f "$RAW/Biofilm project/Senior_Honor_Project.pdf" "$DOCS/biofilm-honours-thesis.pdf"   # 2026-10 修订版（摘要措辞更新）
 cp -f "$RAW/UCL project/Literature_Review (6).pdf" "$DOCS/ucl-literature-review.pdf"
 cp -f "$RAW/certificate/Coursera 7QSU5D87HR7G.pdf" "$DOCS/coursera-1.pdf"
 cp -f "$RAW/certificate/Coursera BZRFLP8Y4U1X.pdf" "$DOCS/coursera-2.pdf"
 cp -f "$RAW/certificate/Haoyang He - Tableau for Data Visualization Certificate.pdf" "$DOCS/tableau-certificate.pdf"
 cp -f "$RAW/certificate/Haoyang He - MySQL for Data Analytics Certificate.png" "$DOCS/mysql-certificate.png"
+# /risk 子站（金融风险方向）：风控版 CV + 风控相关证书
+cp -f "$RAW/CV_Risk.pdf" "$DOCS/Haoyang-He-CV-Financial-Risk.pdf"
+cp -f "$RAW/certificate/GoldmanSachsRisk.pdf" "$DOCS/goldman-sachs-risk-simulation.pdf"
+cp -f "$RAW/certificate/FMEA CPD CERTIFICATE.pdf" "$DOCS/fmea-cpd-certificate.pdf"
+# /risk 首屏背景：摄影集里的城市天际线夜景（photography-10）
+sips -s format jpeg -s formatOptions 82 -Z 1920 "$OUT/photography/photography-10.jpg" --out "$ROOT/public/hero-bg-risk.jpg" >/dev/null 2>&1
 # 项目封面（单独指定的图，非画廊序号）
 mkdir -p "$ROOT/src/assets/covers"
 sips -s format jpeg -Z 1500 "$RAW/Nanjing University Intern/IMG_5439.HEIC" --out "$ROOT/src/assets/covers/nanjing.jpg" >/dev/null 2>&1

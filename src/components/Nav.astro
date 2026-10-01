@@ -1,17 +1,20 @@
 ---
-import { SITE, NAV, withBase } from '../lib/site';
+import { MAIN_PROFILE, withBase, type Profile } from '../lib/site';
 
 interface Props {
   currentPath: string;
+  profile?: Profile;
 }
-const { currentPath } = Astro.props;
-const base = import.meta.env.BASE_URL;
-const isHome = currentPath === '/' || currentPath === base || currentPath === `${base}`;
+const { currentPath, profile = MAIN_PROFILE } = Astro.props;
+const NAV = profile.nav;
+// side-nav 只在该站首页出现（主站 '/'，risk 子站 '/risk/'）；比较前去掉末尾斜杠
+const trimSlash = (p: string) => p.replace(/\/+$/, '');
+const isHome = trimSlash(currentPath) === trimSlash(withBase(profile.home));
 ---
 
 <header class="site-header">
   <nav class="nav-container" aria-label="Primary">
-    <a class="nav-brand" href={withBase('/#home')}>{SITE.name}</a>
+    <a class="nav-brand" href={withBase(`${profile.home}#home`)}>{profile.name}</a>
 
     <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>

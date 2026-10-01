@@ -37,6 +37,10 @@ done < <(find "$RAW/HYPED" -maxdepth 1 -type f -iname '*.mov' -print0 | sort -z)
 
 echo "==> 乐队鼓手视频"
 transcode "$RAW/band/001_WC-EditVideo_1.MP4" "$OUT/band.mp4"
+# /risk 子站 Beyond the Numbers 的 Drums 卡片：第 10 秒定格，3:4 竖构图裁到鼓手
+mkdir -p "$ROOT/src/assets/band"
+ffmpeg -nostdin -y -loglevel error -ss 10 -i "$RAW/band/001_WC-EditVideo_1.MP4" \
+  -frames:v 1 -vf "crop=480:640:515:80" -q:v 2 -pix_fmt yuvj420p "$ROOT/src/assets/band/band-01.jpg"
 
 echo "==> 血液流变实验视频（原 40MB，压制，顺时针旋转 90°）"
 transcode "$RAW/Blood Rheology project/93c35e7cbaa97c4401eeb36f47a65a9a.mp4" "$OUT/blood-rheology.mp4" "transpose=1,"

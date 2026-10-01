@@ -1,0 +1,392 @@
+---
+// /risk —— 金融风险分析师方向的个人主页。与主站同一套设计系统（global.css + 同款组件），
+// 分区结构对标 src/pages/index.astro，内容来自 src/lib/risk.ts 与 src/content/risk/。
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { withBase } from '../../lib/site';
+import {
+  RISK_PROFILE,
+  RISK_AFFILIATION,
+  heroTags,
+  focusAreas,
+  labToRisk,
+  riskSkills,
+  riskEducation,
+  riskCertificates,
+  beyond,
+} from '../../lib/risk';
+import { getCover } from '../../lib/galleries';
+import type { ImageMetadata } from 'astro';
+import uclLogo from '../../assets/logos/ucl.png';
+import ediLogo from '../../assets/logos/edinburgh.png';
+
+const P = RISK_PROFILE;
+
+// 机构 → 校徽（Education 时间线用；无匹配则回退首字母徽标）
+const orgLogos: Record<string, ImageMetadata> = {
+  'University College London': uclLogo,
+  'University of Edinburgh': ediLogo,
+};
+
+const work = (await getCollection('risk')).sort((a, b) => a.data.order - b.data.order);
+
+const heroBg = `url('${withBase('/hero-bg-risk.jpg')}')`;
+
+const beyondCards = beyond.map((b) => ({ ...b, cover: getCover(b.slug) }));
+
+const initials = (s: string) => s.split(' ').map((w) => w[0]).slice(0, 2).join('');
+---
+
+<BaseLayout profile={P}>
+  <!-- ============================ HERO ============================ -->
+  <section id="home" class="hero" style={`--hero-bg:${heroBg}`}>
+    <div class="hero-container container">
+      <div class="hero-image">
+        <img class="profile-photo" src={withBase('/avatar.jpg')} alt={P.name} width="280" height="280" />
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">{P.name} <span class="hero-nick">({P.nickname})</span></h1>
+        <p class="hero-subtitle">{P.role}</p>
+        <p class="hero-affiliation">{RISK_AFFILIATION}</p>
+        <p class="hero-bio">
+          Quantitative STEM graduate moving into financial and credit risk. I analyse large,
+          multi-source datasets in SQL and Python, build and calibrate quantitative models, and
+          trace each change in performance back to its root-cause driver, then turn the
+          findings into clear recommendations.
+        </p>
+        <div class="hero-tags tags">
+          {heroTags.map((t) => <span class="tag">{t}</span>)}
+        </div>
+        <div class="hero-social-icons">
+          <a class="icon-link" href={`mailto:${P.email}`} aria-label="Email" title="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+          </a>
+          <a class="icon-link" href={withBase(P.cv)} target="_blank" rel="noopener" aria-label="CV" title="Download CV">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"></path><path d="M12 11v6m-2.5-2.5L12 17l2.5-2.5"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ABOUT ============================= -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">About Me</h2>
+      <div class="about-content fade-in">
+        <p>
+          I'm a quantitative STEM graduate moving into <strong>financial and credit risk</strong>,
+          with an <strong>MSc in Advanced Materials Science from UCL</strong> (predicted
+          Distinction) and a <strong>BSc in Physics from the University of Edinburgh</strong>.
+        </p>
+        <p>
+          Most of my research came down to one question: what is really driving this change? I
+          have fitted nonlinear models to noisy, time-dependent device data to tell slow ionic
+          drift from fast electronic effects, stress-tested biofilms to find the exact point at
+          which they fail, and located the threshold at which a fluid flow shifts regime. Along
+          the way I have analysed large, multi-source datasets in SQL and Python, with validation
+          built into the workflow. Risk teams ask the same questions of a portfolio: what moved,
+          why, and how close is it to the limit?
+        </p>
+        <p>
+          I have started building the finance side deliberately. I am an <strong>FRM Part I
+          candidate</strong>, currently self-studying for the exam, and I have completed a
+          <strong>Goldman Sachs risk job simulation</strong> covering client credit assessment and
+          real estate risk mitigation, <strong>IOM3 training in Failure Mode &amp; Effects
+          Analysis</strong>, and Wharton's <strong>Business Analytics</strong> specialisation. Next,
+          I want to apply all of it to <strong>portfolio monitoring and lending decisions within
+          risk appetite</strong>, turning analysis into clear reporting and recommendations that
+          stakeholders can act on.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== FOCUS AREAS ========================== -->
+  <section id="focus" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title fade-in">Focus Areas</h2>
+      <div class="interests-grid">
+        {focusAreas.map((it) => (
+          <article class="interest-card fade-in">
+            <div class="interest-icon" aria-hidden="true">{it.icon}</div>
+            <h3>{it.title}</h3>
+            <p>{it.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== EXPERIENCE =========================== -->
+  <section id="experience" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Experience</h2>
+      <p class="section-subtitle fade-in">Risk, data, modelling and research work. Click any card for the full write-up and its risk lens.</p>
+      <div class="card-grid fade-in">
+        {work.map((project) => <ProjectCard project={project} basePath="/risk/experience" />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= FROM LAB TO RISK ========================= -->
+  <section id="transfer" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title fade-in">From Lab to Risk</h2>
+      <p class="section-subtitle fade-in">The questions I asked of materials and data are the ones a risk team asks of a portfolio.</p>
+      <div class="transfer-grid">
+        {labToRisk.map((t) => (
+          <article class="transfer-card fade-in">
+            <h3><span class="transfer-icon" aria-hidden="true">{t.icon}</span>{t.title}</h3>
+            <p class="transfer-row">
+              <span class="transfer-label">What I did</span>
+              {t.did}
+            </p>
+            <p class="transfer-row transfer-row--risk">
+              <span class="transfer-label transfer-label--risk">In risk</span>
+              {t.risk}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ SKILLS ============================ -->
+  <section id="skills" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Technical Skills</h2>
+      <div class="skills-grid">
+        {riskSkills.map((group) => (
+          <article class="skill-card fade-in">
+            <h4>{group.label}</h4>
+            <p>{group.items.join(' · ')}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== EDUCATION =========================== -->
+  <section id="education" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title fade-in">Education</h2>
+      <div class="timeline">
+        {riskEducation.map((e) => (
+          <div class="timeline-item fade-in">
+            <div class="timeline-date">{e.period}</div>
+            <div class="timeline-badge">{orgLogos[e.org] ? <Image class="badge-logo" src={orgLogos[e.org]} alt={e.org} width={112} height={112} /> : <span class="logo-placeholder">{initials(e.org)}</span>}</div>
+            <div class="timeline-content">
+              <h3>{e.degree}</h3>
+              <p class="institution">{e.org}</p>
+              <p class="description">{e.note}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CERTIFICATES ========================= -->
+  <section id="certificates" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Certificates</h2>
+      <div class="awards-list">
+        {riskCertificates.map((c) => (
+          <article class="award-item fade-in">
+            <div class="award-badge-wrap"><span class="award-badge">{c.badge}</span></div>
+            <div class="award-content">
+              <h3>{c.name}</h3>
+              <p class="award-org">{c.org}{c.year && ` · ${c.year}`}</p>
+              {c.note && <p class="award-note">{c.note}</p>}
+              <p class="award-links">
+                {c.file && <a href={withBase(c.file)} target="_blank" rel="noopener">View ↗</a>}
+                {c.verify && <a href={c.verify} target="_blank" rel="noopener">Verify ↗</a>}
+                {c.status && <span class="award-status">{c.status}</span>}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= BEYOND THE NUMBERS ======================= -->
+  <section id="beyond" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title fade-in">Beyond the Numbers</h2>
+      <p class="section-subtitle fade-in">Off the clock: high summits, long trails and loud drums.</p>
+      <div class="adventures-grid beyond-grid fade-in">
+        {beyondCards.map((a) => (
+          <a class="adventure-card" href={withBase(a.href)}>
+            {a.cover && <Image src={a.cover} alt={a.title} widths={[400, 800]} sizes="(max-width:700px) 100vw, 300px" style={a.focus ? `object-position:${a.focus}` : undefined} />}
+            <div class="adventure-cap">
+              <h3>{a.title}</h3>
+              <span>{a.note}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CONTACT ============================ -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Get in Touch</h2>
+      <p class="section-subtitle fade-in">Open to graduate and analyst roles in financial and credit risk.</p>
+      <div class="contact-info fade-in">
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">✉️</div>
+          <h3>Email</h3>
+          <a href={`mailto:${P.email}`}>{P.email}</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">📄</div>
+          <h3>CV</h3>
+          <a href={withBase(P.cv)} target="_blank" rel="noopener">Download PDF ↗</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">📍</div>
+          <h3>Based in</h3>
+          <p>{P.location}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* 与 src/pages/index.astro 同款的分区样式（scoped，两页各自一份，便于日后各自微调） */
+
+    /* ---------------- Hero ---------------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-block: var(--spacing-lg);
+      margin-top: -65px;      /* 让背景延伸到 sticky 导航后方 */
+      padding-top: 65px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: var(--hero-bg);
+      background-size: cover; background-position: center 55%;
+      filter: blur(3px); transform: scale(1.06);
+      z-index: 0;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      /* 夜景天际线比主站雪山暗得多，白色蒙层加厚，保证深色文字对比度 */
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(1px);
+      z-index: 1;
+    }
+    .hero-container {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: var(--spacing-lg);
+    }
+    .hero-image { flex: 0 0 260px; }
+    .profile-photo {
+      width: 260px; height: 260px; border-radius: 50%; object-fit: cover;
+      border: 5px solid var(--color-white); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+    }
+    .hero-content { flex: 1; }
+    .hero-title { font-size: 2.9rem; margin-bottom: 0.3rem; }
+    .hero-nick { color: var(--color-secondary); font-weight: 400; }
+    .hero-subtitle { font-size: 1.35rem; color: var(--color-secondary); font-weight: 400; margin-bottom: 0.4rem; }
+    .hero-affiliation { color: var(--color-text); margin-bottom: var(--spacing-sm); }
+    .hero-bio { max-width: 56ch; color: var(--color-text); margin-bottom: var(--spacing-md); }
+    .hero-tags { margin-bottom: var(--spacing-md); }
+    .hero-social-icons { display: flex; gap: 1rem; }
+
+    /* ---------------- About ---------------- */
+    .about-content { max-width: var(--content); margin: 0 auto; font-size: 1.08rem; line-height: 1.9; text-align: justify; }
+    .about-content p { margin-bottom: 1.3rem; }
+    .about-content p:first-child { font-size: 1.18rem; color: var(--color-secondary); }
+    @media (max-width: 600px) { .about-content { text-align: left; } } /* 窄屏两端对齐会拉出大空隙 */
+
+    /* ---------------- Focus areas ---------------- */
+    .interests-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+    .interest-card { background: var(--color-white); padding: var(--spacing-md); border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; }
+    .interest-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-card-hover); }
+    .interest-icon { font-size: 2.8rem; margin-bottom: var(--spacing-sm); }
+    .interest-card h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
+    .interest-card p { color: var(--color-text-light); font-size: 0.95rem; margin: 0; }
+
+    /* ---------------- From lab to risk ---------------- */
+    .transfer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md); max-width: 1000px; margin: 0 auto; }
+    .transfer-card { background: var(--color-white); padding: 1.6rem 1.8rem; border-radius: 12px; box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; }
+    .transfer-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+    .transfer-card h3 { font-size: 1.3rem; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+    .transfer-icon { font-size: 1.5rem; line-height: 1; }
+    .transfer-row { font-size: 0.95rem; color: var(--color-text-light); margin: 0; }
+    .transfer-row + .transfer-row { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed var(--color-border); }
+    .transfer-row--risk { color: var(--color-text); }
+    .transfer-label {
+      display: block; width: fit-content; margin-bottom: 0.35rem;
+      padding: 0.15rem 0.7rem; border-radius: 15px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--color-hover); color: var(--color-text-light);
+    }
+    .transfer-label--risk { background: var(--color-accent-soft); color: var(--color-secondary); }
+    @media (max-width: 760px) { .transfer-grid { grid-template-columns: 1fr; } }
+
+    /* ---------------- Skills ---------------- */
+    .skills-grid { max-width: 820px; margin: 0 auto; display: grid; gap: 1.3rem; }
+    .skill-card { background: var(--color-white); padding: 1.6rem 2rem; border-radius: 12px; box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; }
+    .skill-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+    .skill-card h4 { color: var(--color-accent); font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .skill-card p { color: var(--color-text-light); margin: 0; }
+
+    /* ---------------- Education ---------------- */
+    .badge-logo { width: 56px; height: 56px; border-radius: 12px; object-fit: contain; background: #fff; border: 1px solid var(--color-border); padding: 5px; }
+
+    /* ---------------- Certificates ---------------- */
+    .awards-list { max-width: var(--content); margin: 0 auto; }
+    .award-item { display: flex; gap: var(--spacing-md); align-items: flex-start; padding: var(--spacing-md); background: var(--color-white); border-radius: 8px; margin-bottom: var(--spacing-sm); box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; }
+    .award-item:hover { transform: translateX(4px); box-shadow: var(--shadow-card-hover); }
+    .award-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: 700; background: var(--color-accent-soft); color: var(--color-secondary); }
+    .award-content h3 { font-size: 1.15rem; margin-bottom: 0.3rem; }
+    .award-org { color: var(--color-text-light); font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .award-note { color: var(--color-text-light); font-size: 0.9rem; font-style: italic; margin: -0.2rem 0 0.4rem; }
+    .award-links { display: flex; gap: 1rem; font-weight: 600; font-size: 0.9rem; margin: 0; }
+    .award-status { color: var(--color-secondary); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .award-status::before { content: '●'; color: var(--color-accent); margin-right: 0.4rem; }
+
+    /* ---------------- Beyond the numbers ---------------- */
+    .adventures-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+    .beyond-grid { max-width: 960px; margin-inline: auto; }
+    .adventure-card { position: relative; display: block; aspect-ratio: 3/4; overflow: hidden; border-radius: 12px; box-shadow: var(--shadow-card); }
+    .adventure-card :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .adventure-card:hover :global(img) { transform: scale(1.06); }
+    .adventure-cap { position: absolute; inset: auto 0 0 0; padding: 1.2rem; background: linear-gradient(to top, rgba(0,0,0,.8), transparent); color: #fff; }
+    .adventure-cap h3 { color: #fff; font-size: 1.3rem; }
+    .adventure-cap span { font-size: 0.9rem; opacity: 0.9; }
+    @media (max-width: 700px) { .adventures-grid { grid-template-columns: 1fr; } .adventure-card { aspect-ratio: 16/10; } }
+
+    /* ---------------- Contact ---------------- */
+    .contact-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md); max-width: 900px; margin: 0 auto; }
+    .contact-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem; padding: var(--spacing-lg) var(--spacing-md); background: var(--color-white); border-radius: 8px; box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; }
+    .contact-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
+    .contact-icon { font-size: 1.8rem; width: 64px; height: 64px; display: grid; place-items: center; background: var(--color-background); border-radius: 50%; }
+    .contact-item h3 { font-size: 1.05rem; margin: 0.3rem 0; }
+    .contact-item a { color: var(--color-accent); font-weight: 500; word-break: break-word; }
+    .contact-item p { margin: 0; color: var(--color-text-light); }
+    @media (max-width: 768px) { .contact-info { grid-template-columns: 1fr; } }
+
+    /* ---------------- Hero responsive ---------------- */
+    @media (max-width: 820px) {
+      .hero-container { flex-direction: column; text-align: center; gap: var(--spacing-md); }
+      .hero-image { margin-top: 1rem; }
+      .profile-photo { width: 200px; height: 200px; }
+      .hero-tags, .hero-social-icons { justify-content: center; }
+      .hero-bio { margin-inline: auto; }
+    }
+  </style>
+</BaseLayout>

@@ -8,15 +8,17 @@ import '@fontsource/lato/700.css';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { SITE } from '../lib/site';
+import { MAIN_PROFILE, type Profile } from '../lib/site';
 
 interface Props {
   title?: string;
   description?: string;
+  // 站点身份（名字 / 头衔 / 导航 / 联系方式）；不传即主站
+  profile?: Profile;
 }
 
-const { title, description = SITE.tagline } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
+const { title, profile = MAIN_PROFILE, description = profile.tagline } = Astro.props;
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} — ${profile.role}`;
 const currentPath = Astro.url.pathname;
 
 // 内联 SVG favicon：案例蓝灰底 + 白色首字母
@@ -35,7 +37,7 @@ const favicon =
     <link rel="icon" href={favicon} />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="author" content={SITE.name} />
+    <meta name="author" content={profile.name} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -43,11 +45,11 @@ const favicon =
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
-    <Nav currentPath={currentPath} />
+    <Nav currentPath={currentPath} profile={profile} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer profile={profile} />
 
     <button class="back-to-top" aria-label="Back to top" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"

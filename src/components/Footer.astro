@@ -1,20 +1,25 @@
 ---
-import { SITE, NAV, withBase } from '../lib/site';
+import { MAIN_PROFILE, withBase, type Profile } from '../lib/site';
+
+interface Props {
+  profile?: Profile;
+}
+const { profile = MAIN_PROFILE } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
   <div class="container">
-    <p class="footer-name">{SITE.name} <span class="footer-nick">({SITE.nickname})</span></p>
-    <p class="footer-role">{SITE.role} · {SITE.location}</p>
+    <p class="footer-name">{profile.name} <span class="footer-nick">({profile.nickname})</span></p>
+    <p class="footer-role">{profile.role} · {profile.location}</p>
 
     <nav class="footer-links" aria-label="Footer">
-      {NAV.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
-      <a href={`mailto:${SITE.email}`}>Email</a>
-      <a href={withBase('/docs/CV.pdf')}>CV</a>
+      {profile.nav.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
+      <a href={`mailto:${profile.email}`}>Email</a>
+      <a href={withBase(profile.cv)}>CV</a>{profile.footerLinks?.map((l) => <a href={withBase(l.href)}>{l.label}</a>)}
     </nav>
 
-    <p class="footer-note">© {year} {SITE.name}. Built with Astro.</p>
+    <p class="footer-note">© {year} {profile.name}. Built with Astro.</p>
   </div>
 </footer>
 
