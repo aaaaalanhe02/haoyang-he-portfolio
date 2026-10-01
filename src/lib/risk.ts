@@ -17,9 +17,9 @@ export const RISK_NAV: NavItem[] = [
 export const RISK_PROFILE: Profile = {
   name: 'Haoyang He',
   nickname: 'Alan',
-  role: 'Aspiring Financial Risk Analyst · FRM Part I Candidate',
+  role: 'Aspiring Financial Risk Analyst',
   tagline:
-    'Quantitative STEM graduate (MSc UCL, BSc Physics Edinburgh) and FRM Part I candidate, moving into financial and credit risk — SQL, Python and statistical modelling, turned into clear risk reporting and recommendations.',
+    'Quantitative STEM graduate (MSc UCL, BSc Physics Edinburgh) moving into financial and credit risk — SQL, Python and statistical modelling, turned into clear risk reporting and recommendations.',
   location: 'London, UK',
   email: 'alanhe02@outlook.com',
   cv: '/docs/Haoyang-He-CV-Financial-Risk.pdf',
@@ -114,7 +114,6 @@ export const riskCertificates: {
   verify?: string;
   status?: string;
 }[] = [
-  { name: 'FRM Part I — Candidate', org: 'GARP · Financial Risk Manager', note: 'Currently self-studying: foundations of risk management, quantitative analysis, financial markets and products, valuation and risk models', badge: 'FRM', status: 'In progress' },
   { year: '2026', name: 'Risk Job Simulation', org: 'Goldman Sachs (via Forage)', note: 'An introduction to risk; evaluating client profiles and real estate investments', badge: 'Risk', file: '/docs/goldman-sachs-risk-simulation.pdf' },
   { year: '2026', name: 'Failure Mode & Effects Analysis', org: 'IOM3 Training Academy', note: 'CPD certified · 6 hours', badge: 'Risk', file: '/docs/fmea-cpd-certificate.pdf' },
   { year: '2025', name: 'Business Analytics Specialization — 5 courses', org: 'The Wharton School, UPenn', badge: 'Data', file: '/docs/coursera-2.pdf' },
